@@ -1,0 +1,6 @@
+{
+  "name": "AI Creative World",
+  "description": "Voice, Text & Design Studio with infinite voices, multi-character real AI chat, worldwide prompt discovery, and transparent PNG design creation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

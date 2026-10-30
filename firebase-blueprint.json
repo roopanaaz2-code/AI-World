@@ -1,0 +1,127 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Represents an authenticated user profile with preference settings.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Unique user ID matching request.auth.uid" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "email": { "type": "string", "description": "User email address" },
+        "avatarUrl": { "type": "string", "description": "Avatar URL or preset avatar identifier" },
+        "preferredLanguage": { "type": "string", "description": "Preferred interface language" },
+        "preferredVoiceId": { "type": "string", "description": "Preferred AI voice persona identifier" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp via serverTimestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp via serverTimestamp" }
+      },
+      "required": ["userId", "displayName", "email", "createdAt", "updatedAt"]
+    },
+    "ChatSession": {
+      "title": "ChatSession",
+      "description": "Represents an AI conversation thread with a specific character.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique chat session ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "title": { "type": "string", "description": "Summary or title of conversation" },
+        "characterId": { "type": "string", "description": "AI character/persona ID" },
+        "voiceId": { "type": "string", "description": "Active voice profile ID" },
+        "lastMessage": { "type": "string", "description": "Snippet of last message" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last message timestamp" }
+      },
+      "required": ["id", "userId", "title", "characterId", "voiceId", "lastMessage", "createdAt", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Represents a single message inside a chat session.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique message ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "chatId": { "type": "string", "description": "Parent chat session ID" },
+        "sender": { "type": "string", "enum": ["user", "ai"], "description": "Sender indicator" },
+        "text": { "type": "string", "description": "Message content" },
+        "characterId": { "type": "string", "description": "AI persona ID associated" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp" }
+      },
+      "required": ["id", "userId", "chatId", "sender", "text", "createdAt"]
+    },
+    "CreationDesign": {
+      "title": "CreationDesign",
+      "description": "Represents a graphic design concept or generated transparent PNG asset.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique creation ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "title": { "type": "string", "description": "Design title" },
+        "prompt": { "type": "string", "description": "Prompt used to generate or design" },
+        "category": { "type": "string", "description": "Design category" },
+        "style": { "type": "string", "description": "Visual style name" },
+        "imageData": { "type": "string", "description": "Base64 encoded PNG or image payload" },
+        "isTransparent": { "type": "boolean", "description": "Whether PNG has alpha transparency" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Update timestamp" }
+      },
+      "required": ["id", "userId", "title", "prompt", "category", "imageData", "isTransparent", "createdAt", "updatedAt"]
+    },
+    "FavoritePrompt": {
+      "title": "FavoritePrompt",
+      "description": "Represents a bookmarked prompt saved by the user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique favorite record ID" },
+        "userId": { "type": "string", "description": "User ID bookmarking the prompt" },
+        "promptId": { "type": "string", "description": "Referenced worldwide prompt ID" },
+        "title": { "type": "string", "description": "Prompt title" },
+        "category": { "type": "string", "description": "Category name" },
+        "prompt": { "type": "string", "description": "Full prompt text" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Bookmark creation time" }
+      },
+      "required": ["id", "userId", "promptId", "title", "category", "prompt", "createdAt"]
+    },
+    "WorldwidePrompt": {
+      "title": "WorldwidePrompt",
+      "description": "Represents a curated worldwide creative prompt item.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique prompt ID" },
+        "title": { "type": "string", "description": "Prompt headline" },
+        "prompt": { "type": "string", "description": "Full prompt template" },
+        "category": { "type": "string", "description": "Creative category" },
+        "description": { "type": "string", "description": "Prompt description" },
+        "aiTool": { "type": "string", "description": "Recommended AI tool" },
+        "trending": { "type": "boolean", "description": "Whether currently trending" },
+        "tags": { "type": "array", "description": "Searchable tags" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["id", "title", "prompt", "category", "description", "aiTool", "trending", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document storing individual preferences."
+    },
+    "/users/{userId}/chats/{chatId}": {
+      "schema": "ChatSession",
+      "description": "Chat threads belonging to the authenticated user."
+    },
+    "/users/{userId}/chats/{chatId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Messages belonging to a chat thread."
+    },
+    "/users/{userId}/creations/{creationId}": {
+      "schema": "CreationDesign",
+      "description": "Transparent designs and artwork generated by the user."
+    },
+    "/users/{userId}/favorite_prompts/{favoriteId}": {
+      "schema": "FavoritePrompt",
+      "description": "Prompts saved/favorited by the user."
+    },
+    "/prompts/{promptId}": {
+      "schema": "WorldwidePrompt",
+      "description": "Curated library of worldwide creative prompts."
+    }
+  }
+}
